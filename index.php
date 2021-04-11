@@ -1,10 +1,10 @@
 <?php
 require 'pdo_connect.php';
 
-// $dbh = new PDO('pgsql:host=localhost;dbname=test', $user, $pass); si le sgbd et postgresql
+// $dbh = new PDO('pgsql:host=localhost;dbname=test', $user, $pass); si le sgbd et postgresql par exemple
 
 
-// Récup des posts du blog fictif
+// Récup des posts du blog fictif et formattage en tab associatif
 $query = $pdo->query("SELECT * FROM post");
 $posts = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -35,6 +35,9 @@ if (!empty($_GET['id'])) {   // le bouton Edit renvoie à cette même page avec 
         body {
             font-family: sans-serif;
         }
+        table {
+            border-collapse: collapse;
+        }
 
         th {
             background-color: dodgerblue;
@@ -42,8 +45,25 @@ if (!empty($_GET['id'])) {   // le bouton Edit renvoie à cette même page avec 
 
         td,
         th {
-            border: 1px solid #333;
+            border: 2px solid #333;
             padding: 10px;
+        }
+        input, textarea {
+            font-size: 20px;
+            color : green;
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color : skyblue;
+            font-weight: bold;
+        }
+        button {
+            background: dodgerblue;
+            border-radius: 5px;
+            border-color: transparent;
+            color : white;
+            padding: 5px;
         }
     </style>
 
@@ -70,7 +90,7 @@ if (!empty($_GET['id'])) {   // le bouton Edit renvoie à cette même page avec 
                 <td><?= $categ_uni[$post['id_category']] ?></td>
                 <td><?= $post['id_category'] ?></td>
 
-                <td><a href="/?id=<?= $post['id'] ?>">Editer</a></td>
+                <td><button><a href="/?id=<?= $post['id'] ?>">Editer</a></button></td>
                 <td>
                     <form action="delete_post.php" method="POST" onsubmit="return confirm('Vous confirmez la suppression ?')">
                         <input type="hidden" name="id" value="<?= $post['id'] ?>">
@@ -82,7 +102,6 @@ if (!empty($_GET['id'])) {   // le bouton Edit renvoie à cette même page avec 
             </tr>
         <?php } ?>
     </table>
-    <br>
 
     <h3>Ajouter ou Modifier un article :</h3>
 
@@ -97,7 +116,7 @@ if (!empty($_GET['id'])) {   // le bouton Edit renvoie à cette même page avec 
         <input type="text" name="post[title]" value="<?= !empty($editPost['title']) ? $editPost['title'] : '' ?>"><br>
 
         <label>Contenu</label><br>
-        <textarea name="post[content]" rows="10" cols="30"><?= !empty($editPost['content']) ? $editPost['content'] : '' ?></textarea><br>
+        <textarea name="post[content]" rows="5" cols="30"><?= !empty($editPost['content']) ? $editPost['content'] : '' ?></textarea><br>
 
         <label>Categorie</label><br>
         <input type="text" name="post[category]" value="<?= !empty($editPost['id_category']) ? $categ_uni[$editPost['id_category']] : '' ?>"><br>
